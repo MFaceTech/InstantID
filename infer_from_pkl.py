@@ -37,7 +37,7 @@ if __name__ == "__main__":
     # user model
     base_model_path = "huggingface/hub/models--stabilityai--stable-diffusion-xl-base-1.0/snapshots/462165984030d82259a11f4367a4eed129e94a7b"
     face_adapter = "InstantID_SDXL/output/test/checkpoint-40000/pytorch_model.bin"
-    controlnet_path = "InstantID_SDXL/output/test/checkpoint-40000/controlnet/"
+    controlnet_path = "InstantID_SDXL/output//test/checkpoint-40000/controlnet/"
 
     # Load pipeline
     controlnet = ControlNetModel.from_pretrained(controlnet_path, torch_dtype=torch.float16)
@@ -60,13 +60,6 @@ if __name__ == "__main__":
     # prompt4 = "a man dressed in casual attire, looking energetic and vibrant, positive and upbeat atmosphere"
     prompt5 = "A serene ambience,traditional Chinese aesthetic,a young woman,gentle expression,concentration on instrument,traditional Chinese guzheng,flowing pale blue and white hanfu with delicate floral accents,a backdrop of lush foliage,soft natural lighting,harmonious color palette of cool tones,ancient heritage,cultural reverence,timeless elegance,poised positioning amidst rocks,black hair adorned with classical hairpin,embodiment of classical Chinese music and beauty,tranquility amidst nature,subtlety in details,fine craftsmanship of the guzheng,ethereal atmosphere,cultural homage."
     # prompt5 = "A serene ambience,traditional Chinese aesthetic,a young man,gentle expression,concentration on instrument,traditional Chinese guzheng,flowing pale blue and white hanfu with delicate floral accents,a backdrop of lush foliage,soft natural lighting,harmonious color palette of cool tones,ancient heritage,cultural reverence,timeless elegance,poised positioning amidst rocks,black hair adorned with classical hairpin,embodiment of classical Chinese music and beauty,tranquility amidst nature,subtlety in details,fine craftsmanship of the guzheng,ethereal atmosphere,cultural homage."
-    prompt6 = "asian woman, (masterpiece, best quality, highres:1.2), (photorealistic:1.2), (intricate and beautiful:1.2), (detailed light:1.2), (colorful, dynamic angle), RAW photo, half body shot, fashion photography, dark palace, medieval goth woman, cute asian face, dark cotton dress, long legs, slim body, stockings, (highres textures), dynamic pose, bokeh, soft light passing through hair, (detailed background:1.3), (sharp), exposure blend, bokeh, (hdr:1.4), high contrast, (cinematic), (muted colors, dim colors, soothing tones:1.3),"
-    # prompt6 = "asin man, (masterpiece, best quality, highres:1.2), (photorealistic:1.2), (intricate and handsome:1.2), (detailed light:1.2), (colorful, dynamic angle), RAW photo, half body shot, fashion photography, dark palace, medieval goth woman, cute asian face, dark cotton dress, long legs, slim body, stockings, (highres textures), dynamic pose, bokeh, soft light passing through hair, (detailed background:1.3), (sharp), exposure blend, bokeh, (hdr:1.4), high contrast, (cinematic), (muted colors, dim colors, soothing tones:1.3),"
-    prompt7 = "A women wearing headphone, listening music"
-    # prompt7 = "A wan wearing headphone, listening music"
-    prompt8 = "A young girl, sunshine, waves, beach, red short hair, black skirt, jewelry"
-    prompt9 = "A woman in a sweater, a city, a close-up shot of a woman's face, around 3 PM, friends, Asia, reality, long hair, sweater, brown hair, brown eyes, smiling, raising her arm, outdoors, daytime, mouth closed."
-    # n_prompt = "(lowres, low quality, worst quality:1.2), (text:1.2), watermark, painting, drawing, illustration, glitch, deformed, mutated, bad-hands, cross-eyed, ugly, disfigured (lowres, low quality, worst quality:1.2), (text:1.2), watermark, painting, drawing, illustration, glitch,deformed, mutated, cross-eyed, ugly, disfigured"
     n_prompt = "ng_deepnegative_v1_75t, (badhandv4:1.2), (worst quality:2), (low quality:2), (normal quality:2), lowres, bad anatomy, bad hands,((monochrome)), ((grayscale)) watermark, moles, large breast, big breast"
 
     # face_image = load_image("./examples/zhuyilong.jpg")
@@ -92,7 +85,7 @@ if __name__ == "__main__":
     pipe.set_ip_adapter_scale(0.8)
 
     # inference
-    for i in range(10):
+    for i in range(6):
         image = pipe(
             prompt=prompts[i],
             negative_prompt=n_prompt,

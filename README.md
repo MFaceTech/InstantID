@@ -18,32 +18,14 @@ Explore this repository to leverage the capabilities of InstantID in your projec
 
 
 ## Demos
+To train our model, we use the script `train_instantId_sdxl.sh`. This script is configured to efficiently handle the training process on our specified private dataset.
 
-### Stylized Synthesis
+For inference, we employ the script `infer_from_pkl.py`. This script allows us to perform inference operations using the trained model. Prior to processing, the get_face_info.py script is used to invoke FaceAnalysis, storing relevant facial information in a PKL file.
 
-<p align="center">
-  <img src="assets/0.png">
-</p>
+By following this process, we can achieve impressive results, showcasing the effectiveness of our training and official inference scripts on private datasets.
 
-### Comparison with Previous Works
+![Example Image](assets/test.png)
 
-<p align="center">
-  <img src="assets/compare-a.png">
-</p>
-
-Comparison with existing tuning-free state-of-the-art techniques. InstantID achieves better fidelity and retain good text editability (faces and styles blend better).
-
-<p align="center">
-  <img src="assets/compare-c.png">
-</p>
-
-Comparison with pre-trained character LoRAs. We don't need multiple images and still can achieve competitive results as LoRAs without any training.
-
-<p align="center">
-  <img src="assets/compare-b.png">
-</p>
-
-Comparison with InsightFace Swapper (also known as ROOP or Refactor). However, in non-realistic style, our work is more flexible on the integration of face and background.
 
 ## Download
 

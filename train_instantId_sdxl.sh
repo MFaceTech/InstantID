@@ -1,6 +1,3 @@
-unset LD_LIBRARY_PATH
-source /usr/local/conda/bin/activate adaptor
-
 # SDXL Model
 export MODEL_NAME="huggingface/hub/models--stabilityai--stable-diffusion-xl-base-1.0/"
 # CLIP Model
@@ -11,7 +8,14 @@ export CONTROLNET_NAME="InstantID/checkpoints/ControlNetModel"
 
 # Dataset
 export ROOT_DATA_DIR="/"
+# This json file ' format:
+# {"file_name": "/data/train_data/images_part0/84634599103.jpg", "additional_feature": "myolv1,a man with glasses and a
+# tie on posing for a picture in front of a window with a building in the background, Andrew Law, johnson ting, a picture,
+# mannerism", "bbox": [-31.329412311315536, 160.6865997314453, 496.19240215420723, 688.1674156188965],
+# "landmarks": [[133.046875, 318], [319.3125, 318], [221.0625, 422], [153.515625, 535], [298.84375, 537]],
+# "insightface_feature_file": "/data/feature_data/images_part0/84634599103.bin"}
 export JSON_FILE="aigc_data/index_files/mt_portrait_dataset.json"
+
 
 # Output
 export OUTPUT_DIR="InstantID_SDXL/output/test"
