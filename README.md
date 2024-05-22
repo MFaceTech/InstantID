@@ -6,12 +6,15 @@
 
 **InstantID : Zero-shot Identity-Preserving Generation in Seconds**
 
-InstantID is a new state-of-the-art tuning-free method to achieve ID-Preserving generation with only single image, supporting various downstream tasks.
 
-This repo is a fork from https://github.com/InstantID/InstantID and provides an unofficial implementation of the training code.
+InstantID represents an excellent tuning-free approach designed for ID-Preserving generation using just a single image. This method supports a variety of downstream tasks, setting a new benchmark in the field.
 
-We extend our gratitude to the authors of "InstantID: Zero-shot Identity-Preserving Generation in Seconds" for open-sourcing their work. We have supplemented the training code and, upon training on our proprietary dataset, we achieved results that align with the performance of the original authors' pretrained model.
-<img src='assets/applications.png'>
+This repository is an unofficial implementation and a fork from the original InstantID repository(https://github.com/InstantID/InstantID ). It includes additional training code not found in the original implementation.
+
+We would like to express our sincere appreciation to the creators of "InstantID: Zero-shot Identity-Preserving Generation in Seconds" for making their innovative work available to the public. In this repository, we have enhanced the training code and, after conducting training sessions on our own proprietary dataset, we have successfully replicated the results demonstrated by the original authors' pretrained model.
+
+Explore this repository to leverage the capabilities of InstantID in your projects and contribute to the evolution of identity-preserving generation technologies.
+
 
 
 ## Demos
