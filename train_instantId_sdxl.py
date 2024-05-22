@@ -117,7 +117,7 @@ class MyDataset(torch.utils.data.Dataset):
         original_width, original_height = raw_image.size
         original_size = torch.tensor([original_height, original_width])
 
-        # transform
+        # transform raw_image and kps_image
         image_tensor = self.image_transforms(raw_image.convert("RGB"))
         kps_image_tensor = self.conditioning_image_transforms(kps_image)
 
@@ -134,6 +134,7 @@ class MyDataset(torch.utils.data.Dataset):
             # top = np.random.randint(0, delta_h + 1)  # random crop
             left = np.random.randint(0, delta_w + 1)  # random crop
 
+        # The image and kps_image must follow the same cropping to ensure that the facial coordinates correspond correctly.
         image = transforms.functional.crop(
             image_tensor, top=top, left=left, height=self.size, width=self.size
         )
@@ -148,7 +149,7 @@ class MyDataset(torch.utils.data.Dataset):
         face_id_embed = torch.from_numpy(face_id_embed)
         face_id_embed = face_id_embed.reshape(1, -1)
 
-        # cfg drop rate
+        # set cfg drop rate
         drop_feature_embed = 0
         drop_text_embed = 0
         rand_num = random.random()
