@@ -32,6 +32,7 @@ else:
     from ip_adapter.attention_processor import IPAttnProcessor, AttnProcessor
 
 
+# Draw the input image for controlnet based on facial keypoints.
 def draw_kps(image_pil, kps, color_list=[(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255)]):
     stickwidth = 4
     limbSeq = np.array([[0, 2], [1, 2], [3, 2], [4, 2]])
@@ -61,7 +62,7 @@ def draw_kps(image_pil, kps, color_list=[(255, 0, 0), (0, 255, 0), (0, 0, 255), 
     out_img_pil = PIL.Image.fromarray(out_img.astype(np.uint8))
     return out_img_pil
 
-# Dataset
+# Process the dataset by loading info from a JSON file, which includes image files, image labels, feature files, keypoint coordinates.
 class MyDataset(torch.utils.data.Dataset):
 
     def __init__(self, json_file, tokenizer, tokenizer_2, size=1024, center_crop=True,
@@ -77,12 +78,9 @@ class MyDataset(torch.utils.data.Dataset):
         self.ti_drop_rate = ti_drop_rate
         self.image_root_path = image_root_path
 
-        # 创建一个空列表来存储解析后的数据
         self.data = []
-        # 读取并解析JSON文件的每一行
         with open(json_file, 'r') as f:
             for line in f:
-                # 解析JSON数据并添加到列表中
                 self.data.append(json.loads(line))
 
         self.image_transforms = transforms.Compose(
@@ -162,7 +160,7 @@ class MyDataset(torch.utils.data.Dataset):
             drop_text_embed = 1
             drop_feature_embed = 1
 
-        # CFG
+        # CFG process
         if drop_text_embed:
             text = ""
         if drop_feature_embed:
@@ -225,7 +223,6 @@ def collate_fn(data):
 
 class InstantIDAdapter(torch.nn.Module):
     """InstantIDAdapter"""
-
     def __init__(self, unet, controlnet, feature_proj_model, adapter_modules, ckpt_path=None):
         super().__init__()
         self.unet = unet
@@ -242,12 +239,12 @@ class InstantIDAdapter(torch.nn.Module):
         down_block_res_samples, mid_block_res_sample = self.controlnet(
             noisy_latents,
             timesteps,
-            encoder_hidden_states=face_embedding,
+            encoder_hidden_states=face_embedding,  # Insightface feature
             added_cond_kwargs=unet_added_cond_kwargs,
-            controlnet_cond=controlnet_image,
+            controlnet_cond=controlnet_image,  # keypoints image
             return_dict=False,
         )
-        # Predict the noise residual
+        # Predict the noise residual.
         noise_pred = self.unet(
             noisy_latents,
             timesteps,
@@ -526,36 +523,37 @@ def main():
             attn_procs[name].load_state_dict(weights)
     unet.set_attn_processor(attn_procs)
     adapter_modules = torch.nn.ModuleList(unet.attn_processors.values())
-
+    # Instantiate InstantIDAdapter from pretrained model or from scratch.
     ip_adapter = InstantIDAdapter(unet, controlnet, feature_proj_model, adapter_modules, args.pretrained_ip_adapter_path)
 
-    # 注册一个钩子函数来在保存之前处理特定模块的状态
+    # Register a hook function to process the state of a specific module before saving.
     def save_model_hook(models, weights, output_dir):
         if accelerator.is_main_process:
-            # 遍历models列表，找到Model类型的实例
+            # find instance of InstantIDAdapter Model.
             for i, model_instance in enumerate(models):
                 if isinstance(model_instance, InstantIDAdapter):
-                    # 提取特定模块的状态，不包括unet
+                    # When saving a checkpoint, only save the ip-adapter and image_proj, do not save the unet.
                     ip_adapter_state = {
                         'image_proj': model_instance.feature_proj_model.state_dict(),
                         'ip_adapter': model_instance.adapter_modules.state_dict(),
                     }
-                    # 将状态保存为bin
                     torch.save(ip_adapter_state, os.path.join(output_dir, 'pytorch_model.bin'))
+                    print(f"IP-Adapter Model weights saved in {os.path.join(output_dir, 'pytorch_model.bin')}")
+                    # Save controlnet separately.
                     sub_dir = "controlnet"
                     model_instance.controlnet.save_pretrained(os.path.join(output_dir, sub_dir))
-
-                    print(f"Model weights saved in {os.path.join(output_dir, 'pytorch_model.bin')}")
-                    # 从weights列表中移除对应权重，因为我们已经单独保存了，切记不能删除对应model，否则第二epoch开始便不能保存model
+                    print(f"Controlnet weights saved in {os.path.join(output_dir, controlnet)}")
+                    # Remove the corresponding weights from the weights list because they have been saved separately.
+                    # Remember not to delete the corresponding model, otherwise, you will not be able to save the model
+                    # starting from the second epoch.
                     weights.pop(i)
                     break
 
     def load_model_hook(models, input_dir):
-        # 遍历models列表，找到Model类型的实例
+        # find instance of InstantIDAdapter Model.
         while len(models) > 0:
             model_instance = models.pop()
             if isinstance(model_instance, InstantIDAdapter):
-                # 加载之前保存的状态
                 ip_adapter_path = os.path.join(input_dir, 'pytorch_model.bin')
                 if os.path.exists(ip_adapter_path):
                     ip_adapter_state = torch.load(ip_adapter_path)
@@ -568,7 +566,7 @@ def main():
                     print(f"No saved weights found at {ip_adapter_path}")
 
 
-    # 注册钩子函数
+    # Register hook functions for saving  and loading.
     accelerator.register_save_state_pre_hook(save_model_hook)
     accelerator.register_load_state_pre_hook(load_model_hook)
 
@@ -659,6 +657,7 @@ def main():
                 feat_embeds = batch["face_id_embed"].to(accelerator.device, dtype=weight_dtype)
                 kps_images = batch["kps_images"].to(accelerator.device, dtype=weight_dtype)
 
+                # for other experiments
                 # clip_images = []
                 # for clip_image, drop_image_embed in zip(batch["clip_images"], batch["drop_image_embeds"]):
                 #     if drop_image_embed == 1:
@@ -700,7 +699,7 @@ def main():
                 optimizer.zero_grad()
 
                 now = datetime.now()
-                formatted_time = now.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]  # 截取到毫秒，丢弃最后三位微秒
+                formatted_time = now.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
                 if accelerator.is_main_process and step % 10 == 0:
                     print("[{}]: Epoch {}, global_step {}, step {}, data_time: {}, time: {}, step_loss: {}".format(
                         formatted_time, epoch, global_step, step, load_data_time, time.perf_counter() - begin,
@@ -708,7 +707,7 @@ def main():
 
             global_step += 1
             if accelerator.is_main_process and global_step % args.save_steps == 0:
-                # _before_ saving state, check if this save would set us over the `checkpoints_total_limit`
+                # before saving state, check if this save would set us over the `checkpoints_total_limit`
                 if args.checkpoints_total_limit is not None:
                     checkpoints = os.listdir(args.output_dir)
                     checkpoints = [d for d in checkpoints if d.startswith("checkpoint")]
