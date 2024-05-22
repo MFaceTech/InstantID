@@ -124,13 +124,3 @@ image = pipe(
 ## Disclaimer
 This project is released under [Apache License](https://github.com/InstantID/InstantID?tab=Apache-2.0-1-ov-file#readme) and aims to positively impact the field of AI-driven image generation. Users are granted the freedom to create images using this tool, but they are obligated to comply with local laws and utilize it responsibly. The developers will not assume any responsibility for potential misuse by users.
 
-## Cite
-If you find InstantID useful for your research and applications, please cite us using this BibTeX:
-
-```bibtex
-@article{wang2024instantid,
-  title={InstantID: Zero-shot Identity-Preserving Generation in Seconds},
-  author={Wang, Qixun and Bai, Xu and Wang, Haofan and Qin, Zekui and Chen, Anthony},
-  journal={arXiv preprint arXiv:2401.07519},
-  year={2024}
-}
