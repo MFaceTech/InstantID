@@ -11,7 +11,7 @@ InstantID represents an excellent tuning-free approach designed for ID-Preservin
 
 This repository is an unofficial implementation and a fork from the original InstantID repository(https://github.com/InstantID/InstantID ). **It includes additional training code not found in the original implementation.**
 
-We would like to express our sincere appreciation to the creators of "InstantID: Zero-shot Identity-Preserving Generation in Seconds" for making their innovative work available to the public. **In this repository, we have developed the training code and, after conducting training sessions on our own proprietary dataset, we have successfully replicated the results demonstrated by the original authors' pretrained model.**
+We would like to express our sincere appreciation to the creators of "InstantID: Zero-shot Identity-Preserving Generation in Seconds" for making their innovative work available to the public. **In this repository, we have developed the training code and, after conducting training sessions on our own proprietary dataset, we have successfully reproduced the results demonstrated by the original authors' pretrained model.**
 
 Explore this repository to leverage the capabilities of InstantID in your projects and contribute to the evolution of identity-preserving generation technologies.
 
