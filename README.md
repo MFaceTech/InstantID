@@ -13,9 +13,6 @@ This repository is an unofficial implementation and a fork from the original Ins
 
 We would like to express our sincere appreciation to the creators of "InstantID: Zero-shot Identity-Preserving Generation in Seconds" for making their innovative work available to the public. **In this repository, we have developed the training code and, after conducting training sessions on our own proprietary dataset, we have successfully reproduced the results demonstrated by the original authors' pretrained model.**
 
-Explore this repository to leverage the capabilities of InstantID in your projects and contribute to the evolution of identity-preserving generation technologies.
-
-
 
 ## Demos
 To train our model, we use the script `train_instantId_sdxl.sh`. This script is configured to efficiently handle the training process on our specified private dataset.
